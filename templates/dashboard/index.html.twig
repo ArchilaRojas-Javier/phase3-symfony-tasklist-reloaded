@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dasboard{% endblock %}
+
+{% block body %}
+    <section class="flex flex-row h-screen w-full">
+        <section class="bg-[#F9FAFB] w-1/4 flex flex-col gap-2 p-4 border-r border-gray-300">
+            <div>
+                <button class="bg-black text-white font-bold py-2 px-4 rounded-md w-full">
+                     Toutes les Tâches
+                </button>
+            </div>
+            <div >
+                <h1 class="text-gray-500 font-bold mb-4" >DOSSIERS</h1>
+             //TODO: Afficher les dossiers de lutilisateur connecté
+                <p class="text-gray-500">Aucun dossier cree</p>
+            </div>
+
+        </section>
+        <section class="bg-white w-full flex flex-col " >
+            <div class="flex flex-row justify-between items-center w-full px-6 py-4">
+                <div>
+                    <h1 class="mb-4">Gestion de Tâches</h1>
+                    <p class="text-gray-400">Organisez votre journée efficacement</p>
+                </div>
+                <div class="flex flex-row gap-2 justify-end-safe p-2 ">
+                    <button>
+                     Gérer les Priorités
+                    </button>
+                    <button class="border border-gray-300 p-1 rounded-lg">
+                     Nouveau Dossier
+                     </button>
+                    <button class="bg-black text-white p-1 font-bold rounded-lg">
+                     + Nouvelle Tâche
+                    </button>
+                    <button class="border border-gray-300 p-1 rounded-lg">
+                     Deconnexion
+                    </button>
+                </div>
+
+            </div>
+            <div class="bg-[#F9FAFB] border-y border-gray-300 px-6 py-4">
+                <div class="flex ">
+                    <p>filtres: </p>
+                    <p>status tous</p>
+                    <p>priorite tous</p>
+
+                </div>
+            </div>
+            <div>
+                <p class="text-gray-500 text-center mt-4">Aucune tâche trouvée. Créez votre première tâche pour commencer à organiser votre journée !</p>
+            </div>
+        </section>
+
+    </section>
+{% endblock %}
