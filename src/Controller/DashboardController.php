@@ -15,11 +15,9 @@ final class DashboardController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $task = new Task();
-        $form = $this->createForm(Task1Type::class, $task);
+        
         return $this->render('dashboard/index.html.twig', [
-            'controller_name' => 'DashboardController',
-            'form' => $form->createView(),
+            'controller_name' => 'DashboardController'
         ]);
     }
 }

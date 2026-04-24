@@ -1,11 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Task{% endblock %}
+{% block title %}New Task
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Task</h1>
+	<section class="bg-white h-screen flex items-center justify-center">
+		<div class="bg-white flex flex-col p-6 gap-4 rounded-xl shadow-md w-full max-w-md border border-gray-300">
+			<div>
+				<h1 class=" font-bold">Créer un tâche</h1>
+			</div>
+			<p class="text-gray-600">Ajoutez une nouvelle tâche à votre liste.</p>
+			
+			<div class="flex flex-col">
 
-    {{ include('task/_form.html.twig') }}
+				{{ form_start(form) }}
+				{{ form_errors(form) }}
 
-    <a href="{{ path('app_task_index') }}">back to list</a>
+				{{ form_label(form.title,'Titre de la tâche') }}
+				{{ form_widget(form.title, 
+				{attr: {class: 'w-full text-gray-600 bg-[#F3F3F5] h-10 mb-4 rounded-md', 
+				placeholder: 'Ex: Terminer le rapport'}}) }}
+				{{ form_errors(form.title) }}
+
+				{{ form_label(form.priority,'Priorité') }}
+				{{ form_widget(form.priority, 
+				{attr: {class: 'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md', 
+				placeholder: 'Seleccioner une Priorité'}}) }}
+				{{ form_errors(form.priority) }}
+
+
+			</div>
+
+		</div>
+
+
+	</section>
+	
+
+
+	<a href="{{ path('app_task_index') }}">back to list</a>
 {% endblock %}
