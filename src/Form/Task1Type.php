@@ -16,15 +16,19 @@ class Task1Type extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('isPinned')
-            ->add('status')
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
+            // ->add('isPinned')
+            // ->add('status')
+            // ->add('user', EntityType::class, [
+            //     'class' => User::class,
+            //     'choice_label' => 'id',
+            // ])
             ->add('priority', EntityType::class, [
                 'class' => Priority::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name'
+            ])
+            ->add('folder', EntityType::class, [
+                'class' => \App\Entity\Folder::class,
+                'choice_label' => 'name'
             ])
         ;
     }

@@ -14,19 +14,30 @@
 			<div class="flex flex-col">
 
 				{{ form_start(form) }}
-				{{ form_errors(form) }}
+					{{ form_errors(form) }}
 
-				{{ form_label(form.title,'Titre de la tâche') }}
-				{{ form_widget(form.title, 
-				{attr: {class: 'w-full text-gray-600 bg-[#F3F3F5] h-10 mb-4 rounded-md', 
-				placeholder: 'Ex: Terminer le rapport'}}) }}
-				{{ form_errors(form.title) }}
+					{{ form_label(form.title,'Titre de la tâche') }}
+					{{ form_widget(form.title, 
+					{attr: {class: 'w-full text-gray-600 bg-[#F3F3F5] h-10 mb-4 rounded-md', 
+					placeholder: 'Ex: Terminer le rapport'}}) }}
+					{{ form_errors(form.title) }}
 
-				{{ form_label(form.priority,'Priorité') }}
-				{{ form_widget(form.priority, 
-				{attr: {class: 'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md', 
-				placeholder: 'Seleccioner une Priorité'}}) }}
-				{{ form_errors(form.priority) }}
+					{{ form_label(form.priority,'Priorité') }}
+					{{ form_widget(form.priority, 
+					{attr: {class: 'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md', 
+					placeholder: 'Seleccioner une Priorité'}}) }}
+					{{ form_errors(form.priority) }}
+
+					{{ form_label(form.folder,'Dossier') }}
+					{{ form_widget(form.folder, 
+					{attr: {class:'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md', 
+					placeholder: 'Seleccioner un Dossier'}}) }}
+					{{ form_errors(form.folder) }}
+
+					<button type="submit" class="w-full bg-black text-white h-10 rounded-md ">{{ button_label|default('Créer') }}</button>
+				{{ form_end(form) }}
+
+				
 
 
 			</div>

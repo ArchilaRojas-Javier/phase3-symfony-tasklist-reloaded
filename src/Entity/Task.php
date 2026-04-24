@@ -30,6 +30,9 @@ class Task
     #[ORM\OneToOne(inversedBy: 'task', cascade: ['persist', 'remove'])]
     private ?Priority $priority = null;
 
+    #[ORM\OneToOne(inversedBy: 'task', cascade: ['persist', 'remove'])]
+    private ?Folder $folder = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,6 +97,18 @@ class Task
     public function setPriority(?Priority $priority): static
     {
         $this->priority = $priority;
+
+        return $this;
+    }
+
+    public function getFolder(): ?Folder
+    {
+        return $this->folder;
+    }
+
+    public function setFolder(?Folder $folder): static
+    {
+        $this->folder = $folder;
 
         return $this;
     }
