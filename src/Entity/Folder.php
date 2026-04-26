@@ -16,11 +16,20 @@ class Folder
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToOne(mappedBy: 'folder', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'folders')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\OneToOne(mappedBy: 'folder', cascade: ['persist', 'remove'])]
-    private ?Task $task = null;
+        /**
+     * @var Collection<int, Task>
+     */
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'folder', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $tasks;
+
+        public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,42 +53,33 @@ class Folder
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+        public function setUser(?User $user): static
     {
-        // unset the owning side of the relation if necessary
-        if ($user === null && $this->user !== null) {
-            $this->user->setFolder(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($user !== null && $user->getFolder() !== $this) {
-            $user->setFolder($this);
-        }
-
         $this->user = $user;
-
         return $this;
     }
 
-    public function getTask(): ?Task
+    public function getTasks(): Collection
     {
-        return $this->task;
+        return $this->tasks;
     }
 
-    public function setTask(?Task $task): static
+    public function addTask(Task $task): static
     {
-        // unset the owning side of the relation if necessary
-        if ($task === null && $this->task !== null) {
-            $this->task->setFolder(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($task !== null && $task->getFolder() !== $this) {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
             $task->setFolder($this);
         }
+        return $this;
+    }
 
-        $this->task = $task;
-
+        public function removeTask(Task $task): static
+    {
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getFolder() === $this) {
+                $task->setFolder(null);
+            }
+        }
         return $this;
     }
 }

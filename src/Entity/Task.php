@@ -18,20 +18,26 @@ class Task
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column]
+    #[ORM\Column (nullable: true)]
     private ?bool $isPinned = null;
 
-    #[ORM\Column(type: Types::STRING,  enumType: TaskStatus::class)]
-    private ?TaskStatus $status = null;
+    #[ORM\Column(type: Types::STRING,  enumType: TaskStatus::class, 
+    options: ['default' => TaskStatus::Pending])]
+    private TaskStatus $status = TaskStatus::Pending;
 
-    #[ORM\ManyToOne(inversedBy: 'Task')]
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+    
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: true)]
 
-    #[ORM\OneToOne(inversedBy: 'task', cascade: ['persist', 'remove'])]
-    private ?Priority $priority = null;
-
-    #[ORM\OneToOne(inversedBy: 'task', cascade: ['persist', 'remove'])]
     private ?Folder $folder = null;
+    
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]   
+    private ?Priority $priority = null;
+    
 
     public function getId(): ?int
     {
@@ -55,7 +61,7 @@ class Task
         return $this->isPinned;
     }
 
-    public function setIsPinned(bool $isPinned): static
+    public function setIsPinned(?bool $isPinned): static
     {
         $this->isPinned = $isPinned;
 
@@ -65,7 +71,7 @@ class Task
     /**
      * @return TaskStatus|null
      */
-    public function getStatus(): ?TaskStatus
+    public function getStatus(): TaskStatus
     {
         return $this->status;
     }

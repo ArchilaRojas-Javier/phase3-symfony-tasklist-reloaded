@@ -30,10 +30,18 @@ final class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $user = $this->getUser();  
+            if (!$user) {
+                return $this->redirectToRoute('app_login');
+            }
+            $task->setUser($user);
+            $task = $form->getData();
             $entityManager->persist($task);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('task/new.html.twig', [

@@ -40,18 +40,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
-    /**
+        /**
      * @var Collection<int, Task>
      */
-    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user')]
-    private Collection $Task;
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $tasks;
 
+    /**
+     * @var Collection<int, Folder>
+     */
+    #[ORM\OneToMany(targetEntity: Folder::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $folders;
+    
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Folder $folder = null;
 
     public function __construct()
     {
-        $this->Task = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
+        $this->folders = new ArrayCollection();
     }
 
 
@@ -145,15 +152,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Task>
      */
-    public function getTask(): Collection
+    public function getTasks(): Collection
     {
-        return $this->Task;
+        return $this->tasks;
     }
 
     public function addTask(Task $task): static
     {
-        if (!$this->Task->contains($task)) {
-            $this->Task->add($task);
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
             $task->setUser($this);
         }
 
@@ -162,7 +169,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeTask(Task $task): static
     {
-        if ($this->Task->removeElement($task)) {
+        if ($this->tasks->removeElement($task)) {
             // set the owning side to null (unless already changed)
             if ($task->getUser() === $this) {
                 $task->setUser(null);
@@ -181,6 +188,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->folder = $folder;
 
+        return $this;
+    }
+
+        public function getFolders(): Collection
+    {
+        return $this->folders;
+    }
+
+    public function addFolder(Folder $folder): static
+    {
+        if (!$this->folders->contains($folder)) {
+            $this->folders->add($folder);
+            $folder->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeFolder(Folder $folder): static
+    {
+        if ($this->folders->removeElement($folder)) {
+            if ($folder->getUser() === $this) {
+                $folder->setUser(null);
+            }
+        }
         return $this;
     }
 
