@@ -1,11 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Folder{% endblock %}
+{% block title %}New Folder
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Folder</h1>
 
-    {{ include('folder/_form.html.twig') }}
 
-    <a href="{{ path('app_folder_index') }}">back to list</a>
+	<section class="bg-white h-screen flex items-center justify-center">
+		<div class=" flex flex-col p-6 gap-4 rounded-xl shadow-md w-full max-w-md border border-gray-300">
+			<div>
+				<h1 class=" font-bold">Créer un dossier</h1>
+			</div>
+			<p class="text-gray-600">Organizes vos tâches par projet.</p>
+
+			<div class="flex flex-col">
+
+				{{ form_start(form) }}
+				{{ form_errors(form) }}
+
+				{{ form_label(form.name,'Nom du dossier') }}
+				{{ form_widget(form.name, 
+					{attr: {class: 'w-full text-gray-600 bg-[#F3F3F5] h-10 mb-4 rounded-md', 
+					placeholder: 'Ex: Travail'}}) }}
+				{{ form_errors(form.name) }}
+
+				<div class="mb-4">
+					{{ form_label(form.color) }}
+					<div class="flex flex-wrap items-center gap-3 mt-2">
+						{% for child in form.color %}
+							<label class="cursor-pointer">
+								{{ form_widget(child, {attr: {style: 'display: none;'}}) }}
+								<span style="display: inline-block; width: 2rem; height: 2rem; background-color: {{ child.vars.attr['data-color'] ?? '#CCCCCC' }}; border-radius: 0;"></span>
+							</label>
+						{% endfor %}
+					</div>
+					{{ form_errors(form.color) }}
+				</div>
+
+				<div class="flex gap-4 justify-end ">
+					<button type="submit" class="w-1/4 border border-gray-300 text-black bg-white h-10 rounded-md ">
+						<a href="{{ path('app_home') }}">Annuler</a>
+					</button>
+					<button type="submit" class="w-1/4 bg-black text-white h-10 rounded-md ">{{ button_label|default('Créer') }}</button>
+				</div>
+
+
+				{{ form_end(form) }}
+
+
+			</div>
+
+		</div>
+
+
+	</section>
 {% endblock %}

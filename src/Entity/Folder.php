@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FolderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FolderRepository::class)]
@@ -25,6 +27,9 @@ class Folder
      */
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'folder', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $tasks;
+
+    #[ORM\Column(length: 6)]
+    private string $color = '#CCCCCC';
 
         public function __construct()
     {
@@ -82,4 +87,16 @@ class Folder
         }
         return $this;
     }
+
+        public function getColor(): ?string
+        {
+            return $this->color;
+        }
+
+        public function setColor(string $color): static
+        {
+            $this->color = $color;
+
+            return $this;
+        }
 }
