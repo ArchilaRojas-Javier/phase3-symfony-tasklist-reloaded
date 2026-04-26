@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PriorityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PriorityRepository::class)]
@@ -19,8 +21,13 @@ class Priority
     #[ORM\Column]
     private ?int $importance = null;
 
-    #[ORM\OneToOne(mappedBy: 'priority', cascade: ['persist', 'remove'])]
-    private ?Task $task = null;
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'priority')]
+    private Collection $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -35,7 +42,6 @@ class Priority
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -47,29 +53,33 @@ class Priority
     public function setImportance(int $importance): static
     {
         $this->importance = $importance;
-
         return $this;
     }
 
-    public function getTask(): ?Task
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
     {
-        return $this->task;
+        return $this->tasks;
     }
 
-    public function setTask(?Task $task): static
+    public function addTask(Task $task): static
     {
-        // unset the owning side of the relation if necessary
-        if ($task === null && $this->task !== null) {
-            $this->task->setPriority(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($task !== null && $task->getPriority() !== $this) {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
             $task->setPriority($this);
         }
+        return $this;
+    }
 
-        $this->task = $task;
-
+    public function removeTask(Task $task): static
+    {
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getPriority() === $this) {
+                $task->setPriority(null);
+            }
+        }
         return $this;
     }
 }
