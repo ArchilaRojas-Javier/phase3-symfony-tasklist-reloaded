@@ -19,6 +19,9 @@ class Folder
     #[ORM\OneToOne(mappedBy: 'folder', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
+    #[ORM\OneToOne(mappedBy: 'folder', cascade: ['persist', 'remove'])]
+    private ?Task $task = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,6 +57,28 @@ class Folder
         }
 
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTask(): ?Task
+    {
+        return $this->task;
+    }
+
+    public function setTask(?Task $task): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($task === null && $this->task !== null) {
+            $this->task->setFolder(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($task !== null && $task->getFolder() !== $this) {
+            $task->setFolder($this);
+        }
+
+        $this->task = $task;
 
         return $this;
     }

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Task
+{% endblock %}
+
+{% block body %}
+	<section class="bg-white h-screen flex items-center justify-center">
+		<div class=" flex flex-col p-6 gap-4 rounded-xl shadow-md w-full max-w-md border border-gray-300">
+			<div>
+				<h1 class=" font-bold">Créer un tâche</h1>
+			</div>
+			<p class="text-gray-600">Ajoutez une nouvelle tâche à votre liste.</p>
+			
+			<div class="flex flex-col">
+
+				{{ form_start(form) }}
+					{{ form_errors(form) }}
+
+					{{ form_label(form.title,'Titre de la tâche') }}
+					{{ form_widget(form.title, 
+					{attr: {class: 'w-full text-gray-600 bg-[#F3F3F5] h-10 mb-4 rounded-md', 
+					placeholder: 'Ex: Terminer le rapport'}}) }}
+					{{ form_errors(form.title) }}
+
+					{{ form_label(form.priority,'Priorité') }}
+					{{ form_widget(form.priority, 
+					{attr: {
+						class: 'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md'}}) }}
+					{{ form_errors(form.priority) }}
+
+					{{ form_label(form.folder,'Dossier') }}
+					{{ form_widget(form.folder, 
+					{attr: {
+						class:'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md'}}) }}
+					{{ form_errors(form.folder) }}
+					
+					<div class="flex gap-4 justify-end ">
+					<button type="submit" class="w-1/4 border border-gray-300 text-black bg-white h-10 rounded-md "><a href="{{ path('app_home') }}">Annuler</a></button>
+					<button type="submit" class="w-1/4 bg-black text-white h-10 rounded-md ">{{ button_label|default('Créer') }}</button>
+					</div>
+										
+
+				{{ form_end(form) }}
+
+				
+
+
+			</div>
+
+		</div>
+
+
+	</section>
+	
+
+
+	<a href="{{ path('app_task_index') }}">back to list</a>
+{% endblock %}
