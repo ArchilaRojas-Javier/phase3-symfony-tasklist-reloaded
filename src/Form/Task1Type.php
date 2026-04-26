@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Priority;
 use App\Entity\Task;
 use App\Entity\User;
+use Doctrine\Common\Collections\Placeholder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,11 +25,13 @@ class Task1Type extends AbstractType
             // ])
             ->add('priority', EntityType::class, [
                 'class' => Priority::class,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'placeholder' => 'Seleccioner une Priorité'
             ])
             ->add('folder', EntityType::class, [
                 'class' => \App\Entity\Folder::class,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'placeholder' => 'Seleccioner un Dossier'
             ])
         ;
     }

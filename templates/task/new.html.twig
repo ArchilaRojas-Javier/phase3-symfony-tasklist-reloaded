@@ -24,17 +24,22 @@
 
 					{{ form_label(form.priority,'Priorité') }}
 					{{ form_widget(form.priority, 
-					{attr: {class: 'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md', 
-					placeholder: 'Seleccioner une Priorité'}}) }}
+					{attr: {
+						class: 'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md'}}) }}
 					{{ form_errors(form.priority) }}
 
 					{{ form_label(form.folder,'Dossier') }}
 					{{ form_widget(form.folder, 
-					{attr: {class:'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md', 
-					placeholder: 'Seleccioner un Dossier'}}) }}
+					{attr: {
+						class:'w-full h-10 text-gray-600 bg-[#F3F3F5] mb-4 rounded-md'}}) }}
 					{{ form_errors(form.folder) }}
+					
+					<div class="flex gap-4 justify-end ">
+					<button type="submit" class="w-1/4 border border-gray-300 text-black bg-white h-10 rounded-md "><a href="{{ path('app_home') }}">Annuler</a></button>
+					<button type="submit" class="w-1/4 bg-black text-white h-10 rounded-md ">{{ button_label|default('Créer') }}</button>
+					</div>
+										
 
-					<button type="submit" class="w-full bg-black text-white h-10 rounded-md ">{{ button_label|default('Créer') }}</button>
 				{{ form_end(form) }}
 
 				
