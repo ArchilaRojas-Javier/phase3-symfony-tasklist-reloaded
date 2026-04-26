@@ -14,6 +14,7 @@ class Task1Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options['user'];
         $builder
             ->add('title')
             // ->add('isPinned')
@@ -32,6 +33,11 @@ class Task1Type extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Seleccioner un Dossier',
                 'required' => false,
+                'query_builder' => function (\App\Repository\FolderRepository $fr) use ($user) {
+                    return $fr->createQueryBuilder('f')
+                        ->where('f.user = :user')
+                        ->setParameter('user', $user);
+                },
             ])
         ;
     }
@@ -40,6 +46,7 @@ class Task1Type extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
+            'user' => null,
         ]);
     }
 }

@@ -10,31 +10,37 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 #[Route('/task')]
+#[IsGranted('ROLE_USER')]
+
 final class TaskController extends AbstractController
 {
     #[Route(name: 'app_task_index', methods: ['GET'])]
     public function index(TaskRepository $taskRepository): Response
     {
+        $user = $this->getUser();
+        $tasks = $taskRepository->findBy(['user' => $user]);
         return $this->render('task/index.html.twig', [
-            'tasks' => $taskRepository->findAll(),
+            'tasks' => $tasks,
         ]);
+       
     }
 
     #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $task = new Task();
-        $form = $this->createForm(Task1Type::class, $task);
+        $user = $this->getUser();
+        $form = $this->createForm(Task1Type::class, $task, [
+            'user' => $user,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             
-            $user = $this->getUser();  
-            if (!$user) {
-                return $this->redirectToRoute('app_login');
-            }
             $task->setUser($user);
             $task = $form->getData();
             $entityManager->persist($task);
