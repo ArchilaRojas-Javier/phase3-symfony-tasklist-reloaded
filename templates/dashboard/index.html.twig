@@ -14,17 +14,17 @@
             <div class="flex flex-col gap-2">
              {%if folders%}
              {% for folder in folders %}
-                <div class="flex  items-center gap-2">
+                <div class="flex items-center gap-2">
                     
                     <span style="display: inline-block; width: 1rem; height: 1rem; 
                     background-color: {{ folder.color ?? '#CCCCCC' }}; border-radius: 0;"></span>
                     
-                    <a href="{{ path('app_folder_show', {'id': folder.id}) }}"class="flex justify-between items-center w-full p-2 rounded-md hover:bg-gray-200">  
+                    <a href="{{ path('app_folder_show', {'id': folder.id}) }}"class="flex gap-4 items-center w-full rounded-md hover:bg-gray-200">  
                     
                         <span>{{ ux_icon('tabler:folder', { class: 'w-4 h-4' }) }}</span>
                         <p>{{ folder.name }}</p>
-                        <span class=" text-gray-700 text-sm text-right">{{ folder.tasks|length }}</span>
                     </a>
+                        <span class="text-gray-700 text-sm text-right">{{ folder.tasks|length }}</span>
                     
                 </div>
                 {%endfor%}
