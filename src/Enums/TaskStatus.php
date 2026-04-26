@@ -8,6 +8,6 @@ enum TaskStatus : string
 {
     case Pending = "pending";
     case Completed = "completed";
-    case Archived = "archived";
+    case Encours = "en cours";
 
 }

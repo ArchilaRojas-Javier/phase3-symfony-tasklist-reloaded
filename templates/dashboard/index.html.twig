@@ -1,74 +1,136 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dasboard{% endblock %}
+{% block title %}Dasboard
+{% endblock %}
 
 {% block body %}
-    <section class="flex flex-row h-screen w-full">
-        <section class="bg-[#F9FAFB] w-1/4 flex flex-col gap-2 p-4 border-r border-gray-300">
-            <div>
-                <button class="bg-black text-white font-bold py-2 px-4 rounded-md w-full">
-                     Toutes les Tâches
-                </button>
-            </div>
-                <h1 class="text-gray-500 font-bold mb-4" >DOSSIERS</h1>
-            <div class="flex flex-col gap-2">
-             {%if folders%}
-             {% for folder in folders %}
-                <div class="flex items-center gap-2">
-                    
-                    <span style="display: inline-block; width: 1rem; height: 1rem; 
-                    background-color: {{ folder.color ?? '#CCCCCC' }}; border-radius: 0;"></span>
-                    
-                    <a href="{{ path('app_folder_show', {'id': folder.id}) }}"class="flex gap-4 items-center w-full rounded-md hover:bg-gray-200">  
-                    
-                        <span>{{ ux_icon('tabler:folder', { class: 'w-4 h-4' }) }}</span>
-                        <p>{{ folder.name }}</p>
-                    </a>
-                        <span class="text-gray-700 text-sm text-right">{{ folder.tasks|length }}</span>
-                    
-                </div>
-                {%endfor%}
-                {%else%}
-                <p class="text-gray-500">Aucun dossier cree</p>
-                {%endif%}
-            </div>
+	<section class="flex flex-row h-screen w-full">
+		<section class="bg-[#F9FAFB] w-1/4 flex flex-col gap-2 p-4 border-r border-gray-300">
+			<div>
+				<a href="{{ path('app_home',) }}" class="block">
+					<button class="bg-black text-white font-bold py-2 px-4 rounded-md w-full">
+						Toutes les Tâches
+					</button>
+				</a>
+			</div>
+			<h1 class="text-gray-500 font-bold mb-4">DOSSIERS</h1>
+			<div class="flex flex-col gap-2">
+				{%if folders%}
+					{% for folder in folders %}
+						<div class="flex items-center gap-2">
 
-        </section>
-        <section class="bg-white w-full flex flex-col " >
-            <div class="flex flex-row justify-between items-center w-full px-6 py-4">
-                <div>
-                    <h1 class="mb-4">Gestion de Tâches</h1>
-                    <p class="text-gray-400">Organisez votre journée efficacement</p>
-                </div>
-                <div class="flex flex-row gap-2 justify-end-safe p-2 ">
-                    <button>
-                     Gérer les Priorités
-                    </button>
-                    <button class="border border-gray-300 p-1 rounded-lg"><a href="{{ path('app_folder_new') }}">+
-                     Nouveau Dossier
-                     </button>
-                    <button class="bg-black text-white p-1 font-bold rounded-lg">
-                     <a href="{{ path('app_task_new') }}">+ Nouvelle Tâche</a>
-                    </button>
-                    <button class="border border-gray-300 p-1 rounded-lg">
-                     Deconnexion
-                    </button>
-                </div>
+							<span style="display: inline-block; width: 1rem; height: 1rem;
+																								                    background-color: {{ folder.color ?? '#CCCCCC' }}; border-radius: 0;"></span>
 
-            </div>
-            <div class="bg-[#F9FAFB] border-y border-gray-300 px-6 py-4">
-                <div class="flex ">
-                    <p>filtres: </p>
-                    <p>status tous</p>
-                    <p>priorite tous</p>
+							<a href="{{ path('app_home', {'folder': folder.id}) }}" class="flex gap-4 items-center w-full rounded-md hover:bg-gray-200">
 
-                </div>
-            </div>
-            <div>
-                <p class="text-gray-500 text-center mt-4">Aucune tâche trouvée. Créez votre première tâche pour commencer à organiser votre journée !</p>
-                
-            </div>
-        </section>
+								<span>{{ ux_icon('lucide:folder', { class: 'w-4 h-4' }) }}</span>
+								<p>{{ folder.name }}</p>
+							</a>
+							<span class="text-gray-700 text-sm text-right">{{ folder.tasks|length }}</span>
 
-    </section>
-{% endblock %}
+						</div>
+						{%endfor%}
+						{%else%}
+						<p class="text-gray-700">Aucun dossier cree</p>
+						{%endif%}
+					</div>
+
+				</section>
+				<section class="bg-white w-full flex flex-col ">
+					<div class="flex flex-row justify-between items-center w-full px-6 py-4">
+						<div>
+							<h1 class="mb-4">Gestion de Tâches</h1>
+							<p class="text-gray-700">Organisez votre journée efficacement</p>
+						</div>
+						<div class="flex flex-row gap-2 justify-end-safe p-2 ">
+							<button class="flex items-center gap-2">
+								{{ ux_icon('lucide:settings') }}
+								Gérer les Priorités
+							</button>
+							<button class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg">{{ ux_icon('lucide:folder-plus', { class: 'w-4 h-4' }) }}<a href="{{ path('app_folder_new') }}">
+									Nouveau Dossier
+								</button>
+								<button class="bg-black text-white p-1 font-bold rounded-lg">
+									<a href="{{ path('app_task_new') }}">+ Nouvelle Tâche</a>
+								</button>
+								<button class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg">
+									{{ ux_icon('lucide:log-out') }}
+									Deconnexion
+								</button>
+							</div>
+
+						</div>
+						<div class="bg-[#F9FAFB] border-y border-gray-300 px-6 py-4">
+							<div class="flex items-center gap-2">
+								<span>{{ ux_icon('iconoir:filter') }}</span>
+
+								<p>filtres:
+								</p>
+								<p>status tous</p>
+								<p>priorite tous</p>
+
+							</div>
+						</div>
+						<div class="flex flex-col py-6 gap-2 px-28 w-full">
+							{%if tasks is empty %}
+								<p class="text-gray-700 text-center mt-4">Aucune tâche trouvée. Créez votre première tâche pour commencer à organiser votre journée !</p>
+							{% else %}
+
+
+								{% for task in tasks %}
+									<div class="flex border border-gray-300 rounded-lg w-full justify-between items-center p-4">
+										
+                                            <div class="flex items-center gap-2">
+                                                    <form  method="post" action="{{ path('app_task_edit', {'id': task.id}) }}" class="w-4 h-4 items-center">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('task_edit-' ~ task.id) }}">
+                                                        <button type="submit" class="focus:outline-none">
+                                                            {% if task.status.value == 'completed' %}
+                                                                {{ ux_icon('lucide:check-square', { class: 'w-4 h-4 text-green-600' }) }}
+                                                            {% else %}
+                                                                {{ ux_icon('lucide:square', { class: 'w-4 h-4 text-gray-400' }) }}
+                                                            {% endif %}
+                                                         </button>
+                                                    </form>
+                                                <div>
+
+                                                    <p class="{% if task.status.value == 'completed' %}line-through text-gray-500{% endif %}">{{ task.title }}</p>
+                                                
+                                                    <p class="text-sm text-gray-500">{{ task.status.value|capitalize }}</p>
+                                                </div>
+                                                                                        
+                                                
+                                            </div>
+                                            
+                                            <div class="flex items-center gap-4">
+                                                {% if task.isPinned %}
+                                                    <span>{{ ux_icon('lucide:pin', { class: 'w-4 h-4 text-gray-500' }) }}</span>
+                                                    {% else %}
+                                                    <span>{{ ux_icon('lucide:pin-off', { class: 'w-4 h-4 text-gray-500' }) }}</span>
+                                                {% endif %}
+                                            
+                                                <form  method="post" action="{{ path('app_task_delete', {'id': task.id}) }}" class="w-4 h-4 items-center" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                                                    <button class="btn items-center">{{ ux_icon('lucide:trash', { class: 'w-4 h-4' }) }}</button>
+                                                </form>
+                                            
+                                            </div>
+                                         </div>
+								{% endfor %}
+
+							{% endif %}
+						</div>
+					</section>
+
+				</section>
+			{% endblock %}
+                    
+                                                
+                                                
+
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                

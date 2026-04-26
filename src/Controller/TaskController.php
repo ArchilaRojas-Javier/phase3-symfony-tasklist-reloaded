@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Enums\TaskStatus;
 
 
 #[Route('/task')]
@@ -65,21 +66,32 @@ final class TaskController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_task_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Task $task, EntityManagerInterface $entityManager): Response
+    public function edit(int $id, Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Task1Type::class, $task);
-        $form->handleRequest($request);
+        $task = $entityManager->getRepository(Task::class)->find($id);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('task_edit-' . $id, $token)) {
+        throw $this->createAccessDeniedException('Invalid CSRF token');
         }
+        $current = $task->getStatus();
+        if ($task) {
 
-        return $this->render('task/edit.html.twig', [
-            'task' => $task,
-            'form' => $form,
-        ]);
+            if ($current === TaskStatus::Pending) {
+                $task->setStatus(TaskStatus::Encours);
+            } elseif ($current === TaskStatus::Encours) {
+                $task->setStatus(TaskStatus::Completed);
+            } elseif ($current === TaskStatus::Completed){
+                $task->setStatus(TaskStatus::Pending);
+            }else {
+                $task->setStatus(TaskStatus::Completed);
+            }
+            
+            
+            $entityManager->flush();
+        }
+            
+return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('app_home'));        
     }
 
     #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
@@ -90,6 +102,6 @@ final class TaskController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 }
