@@ -53,7 +53,7 @@ final class DashboardController extends AbstractController
             'folders' => $folders,
             'tasks' => $tasks,
             'selectedFolder' => $selectedFolder,
-            'taskPinned' => $taskPinned,
+            'taskPinned' => $taskPinned
         ]);
     }
 }

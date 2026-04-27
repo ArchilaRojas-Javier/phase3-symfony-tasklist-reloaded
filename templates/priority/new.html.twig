@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Priority{% endblock %}
+
+{% block body %}
+    <section class="bg-white h-screen flex items-center justify-center">
+		<div class=" flex flex-col p-6 gap-4 rounded-xl shadow-md w-full max-w-md border border-gray-300">
+			<div>
+				<h1 class=" font-bold">Gérer les priorités</h1>
+			</div>
+			<p class="text-gray-600">Ajoutez ou suprimes de niveaux de priorité personnalisés.</p>
+			
+			<div class="flex flex-col gap-2">
+
+				{{ form_start(form) }}
+					{{ form_errors(form) }}
+
+					{{ form_label(form.name,'Titre de la tâche') }}
+					{{ form_widget(form.name, 
+					{attr: {class: 'w-full text-gray-600 bg-[#F3F3F5] h-10 mb-4 rounded-md', 
+					placeholder: 'Ex: Trés urgent'}}) }}
+					{{ form_errors(form.name) }}
+
+					<p>Priorites exitantes </p>
+                    {% if priorities %}
+                        <div class="flex flex-col w-full gap-2 ">
+                            {% for priority in priorities %}
+                                <p class="border border-gray-300 rounded-lg p-2 gap-2 ">{{ priority.name }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-600">Aucune priorité définie.</p>
+                    {% endif %}
+					
+                    <div class="flex gap-4 justify-end mt-4">
+					<button type="submit" class="w-1/4 border border-gray-300 text-black bg-white h-10 rounded-md "><a href="{{ path('app_home') }}">Annuler</a></button>
+					<button type="submit" class="w-1/4 bg-black text-white h-10 rounded-md ">{{ button_label|default('Créer') }}</button>
+					</div>
+										
+
+				{{ form_end(form) }}
+
+				
+
+
+			</div>
+
+		</div>
+
+
+	</section>
+    
+{% endblock %}
