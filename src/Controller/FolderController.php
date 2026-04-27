@@ -49,41 +49,6 @@ final class FolderController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_folder_show', methods: ['GET'])]
-    public function show(Folder $folder): Response
-    {
-        if ($folder->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Acces non authorisé.');
-            return $this->redirectToRoute('app_home');
-        }
-        return $this->render('folder/show.html.twig', [
-            'folder' => $folder,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_folder_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Folder $folder, EntityManagerInterface $entityManager): Response
-    {
-        if ($folder->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Acces non authorisé.');
-            return $this->redirectToRoute('app_home');
-        }
-
-        $form = $this->createForm(FolderType::class, $folder);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_folder_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('folder/edit.html.twig', [
-            'folder' => $folder,
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/{id}', name: 'app_folder_delete', methods: ['POST'])]
     public function delete(Request $request, Folder $folder, EntityManagerInterface $entityManager): Response
     {

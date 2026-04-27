@@ -49,32 +49,6 @@ final class PriorityController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_priority_show', methods: ['GET'])]
-    public function show(Priority $priority): Response
-    {
-        return $this->render('priority/show.html.twig', [
-            'priority' => $priority,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_priority_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Priority $priority, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(PriorityType::class, $priority);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_priority_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('priority/edit.html.twig', [
-            'priority' => $priority,
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/{id}', name: 'app_priority_delete', methods: ['POST'])]
     public function delete(Request $request, Priority $priority, EntityManagerInterface $entityManager): Response
     {
