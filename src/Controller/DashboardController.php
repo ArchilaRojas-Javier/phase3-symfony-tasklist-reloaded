@@ -19,9 +19,13 @@ final class DashboardController extends AbstractController
     public function index(Request $request, FolderRepository $folderRepository, TaskRepository $taskRepository): Response
     {
         $user = $this->getUser();
+        
         $folders = $folderRepository->findBy(['user' => $user]);
 
+        $taskPinned = $taskRepository->findBy(['user' => $user, 'isPinned' => true]);
+
         $selectedFolderId = $request->query->get('folder');
+        
         $selectedFolder = null;
         
         $tasks = [];
@@ -29,13 +33,16 @@ final class DashboardController extends AbstractController
         if ($selectedFolderId) {
         
             $selectedFolder = $folderRepository->findOneBy(['id' => $selectedFolderId, 'user' => $user]);
+            
             if ($selectedFolder) {
                 
                 $tasks = $taskRepository->findBy(['folder' => $selectedFolder, 'user' => $user]);
+           
             } else {
                 
                 $tasks = $taskRepository->findBy(['user' => $user]);
             }
+        
         }else {
             
             $tasks = $taskRepository->findBy(['user' => $user]);
@@ -45,7 +52,8 @@ final class DashboardController extends AbstractController
             'controller_name' => 'DashboardController',
             'folders' => $folders,
             'tasks' => $tasks,
-            'selectedFolder' => $selectedFolder
+            'selectedFolder' => $selectedFolder,
+            'taskPinned' => $taskPinned,
         ]);
     }
 }

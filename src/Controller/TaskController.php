@@ -91,7 +91,31 @@ final class TaskController extends AbstractController
             $entityManager->flush();
         }
             
-return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('app_home'));        
+        return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('app_home'));        
+    }
+
+    #[Route('/{id}/isPinned', name: 'app_task_isPinned', methods: ['GET', 'POST'])]
+    public function isPinned(int $id, Request $request, Task $task, EntityManagerInterface $entityManager): Response
+    {
+        $task = $entityManager->getRepository(Task::class)->find($id);
+
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('task_isPinned-' . $id, $token)) {
+        throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+        $isPinned = $task->isPinned();
+        if ($task) {
+
+            if (!$isPinned) {
+                 $task->setIsPinned(true);
+            } else {
+                 $task->setIsPinned(false);
+            }
+                
+        $entityManager->flush();
+        }
+            
+        return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('app_home'));        
     }
 
     #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
