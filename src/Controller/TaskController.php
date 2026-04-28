@@ -14,22 +14,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Enums\TaskStatus;
 
 
+
 #[Route('/task')]
 #[IsGranted('ROLE_USER')]
 
 final class TaskController extends AbstractController
 {
-    #[Route(name: 'app_task_index', methods: ['GET'])]
-    public function index(TaskRepository $taskRepository): Response
-    {
-        $user = $this->getUser();
-        $tasks = $taskRepository->findBy(['user' => $user]);
-        return $this->render('task/index.html.twig', [
-            'tasks' => $tasks,
-        ]);
-       
-    }
-
+    
     #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

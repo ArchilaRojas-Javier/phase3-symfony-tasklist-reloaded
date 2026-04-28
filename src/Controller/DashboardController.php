@@ -2,58 +2,78 @@
 
 namespace App\Controller;
 
+use App\Enums\TaskStatus;
+use App\Repository\FolderRepository;
+use App\Repository\PriorityRepository;
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\HttpFoundation\Request;
-use App\Repository\FolderRepository;
-use App\Repository\TaskRepository;
 
 final class DashboardController extends AbstractController
 {
     #[IsGranted('ROLE_USER')]
-
     #[Route('/', name: 'app_home')]
-    public function index(Request $request, FolderRepository $folderRepository, TaskRepository $taskRepository): Response
-    {
-        $user = $this->getUser();
+    public function index(Request $request, FolderRepository $folderRepository, TaskRepository $taskRepository, PriorityRepository $priorityRepository): Response {
         
+        $user = $this->getUser();
+
         $folders = $folderRepository->findBy(['user' => $user]);
+        $priorities = $priorityRepository->findAll();
 
         $taskPinned = $taskRepository->findBy(['user' => $user, 'isPinned' => true]);
 
         $selectedFolderId = $request->query->get('folder');
-        
-        $selectedFolder = null;
-        
-        $tasks = [];
+        $statusString = $request->query->get('status');
+        $priorityId = $request->query->get('priority');
+
+        $qb = $taskRepository->createQueryBuilder('t');
+        $qb->where('t.user = :user')
+           ->andWhere('t.isPinned = :pinned')
+           ->setParameter('user', $user)
+           ->setParameter('pinned', false);
 
         if ($selectedFolderId) {
-        
             $selectedFolder = $folderRepository->findOneBy(['id' => $selectedFolderId, 'user' => $user]);
-            
             if ($selectedFolder) {
-                
-                $tasks = $taskRepository->findBy(['folder' => $selectedFolder, 'user' => $user]);
-           
-            } else {
-                
-                $tasks = $taskRepository->findBy(['user' => $user]);
+                $qb->andWhere('t.folder = :folder')
+                   ->setParameter('folder', $selectedFolder);
             }
-        
-        }else {
-            
-            $tasks = $taskRepository->findBy(['user' => $user]);
         }
+
+        if ($statusString) {
+            $enumStatus = TaskStatus::tryFrom($statusString);
+            if ($enumStatus) {
+                $qb->andWhere('t.status = :status')
+                   ->setParameter('status', $enumStatus);
+            }
+        }
+
+        if ($priorityId) {
+            $priority = $priorityRepository->find($priorityId);
+            if ($priority) {
+                $qb->andWhere('t.priority = :priority')
+                   ->setParameter('priority', $priority);
+            }
+        }
+
+        // $selectedFolder = null;
         
+        // if ($selectedFolderId) {
+        //     $selectedFolder = $folderRepository->findOneBy(['id' => $selectedFolderId, 'user' => $user]);
+        // }
+        
+        $tasks = $qb->getQuery()->getResult();
+
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
             'folders' => $folders,
-            'tasks' => $tasks,
-            'selectedFolder' => $selectedFolder,
-            'taskPinned' => $taskPinned
+            'tasks' => $tasks,          
+            //'selectedFolder' => $selectedFolder,
+            'taskPinned' => $taskPinned, 
+            'priorities' => $priorities,
         ]);
     }
 }

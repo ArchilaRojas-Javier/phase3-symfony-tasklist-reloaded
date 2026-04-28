@@ -69,17 +69,36 @@
 				<div class="flex items-center gap-2">
 					<span>{{ ux_icon('iconoir:filter') }}</span>
 
-					<p>filtres:</p>
-					<p>status tous</p>
-					<p>priorite tous</p>
+					<p>Filtres:</p>
+						<form method="get" action={{ path('app_home') }} class="flex items-center gap-4">
 
+						<div>
+							<label for="status">Status</label>
+							<select name="status" id="status" class="border border-gray-300 bg-gray-100 rounded-lg" onchange="this.form.submit()">
+									<option value="">Tous</option>
+									<option value="pending" {{ app.request.query.get('status') == 'pending' ? 'selected' }}>Pending</option>
+									<option value="en cours" {{ app.request.query.get('status') == 'encours' ? 'selected' }}>En cours</option>
+									<option value="completed" {{ app.request.query.get('status') == 'completed' ? 'selected' }}>Completed</option>
+							</select>
+						</div>
+						
+						<div>
+							<label for="priority">Priorité</label>
+							<select name="priority" id="priority" class="border border-gray-300 bg-gray-100 rounded-lg" onchange="this.form.submit()">
+								<option value="">Toutes</option>
+								{% for priority in priorities %}
+									<option value="{{ priority.id }}" {{ app.request.query.get('priority') == priority.id ? 'selected' }}>
+										{{ priority.name }}
+									</option>
+								{% endfor %}
+									
+							</select>
+						</div>
+					</form>
 				</div>
 			</div>
 						
 			<div class="flex flex-col py-6 gap-2 px-28 w-full">
-				{% if tasks is empty %}
-					<p class="text-gray-700 text-center mt-4">Aucune tâche trouvée. Créez votre première tâche pour commencer à organiser votre journée !</p>
-				{% else %}
 
 					{% for task in taskPinned %}
 						
@@ -132,10 +151,10 @@
 							</div>
 						
 					{% endfor %}
-				{% endif %}
+				
 
 				{% for task in tasks %}
-					{% if not task.isPinned  %}
+					{# {% if not task.isPinned  %} #}
 						
 						<div class="flex border border-gray-300 rounded-lg w-full justify-between items-center p-4">
 
@@ -185,9 +204,12 @@
 
 							</div>
 						</div>
-					{% endif %}
+					{# {% endif %} #}
 				{% endfor %}
 			</div>
+				{% if tasks is empty %}
+					<p class="text-gray-700 text-center mt-4">Aucune tâche trouvée. Créez votre première tâche pour commencer à organiser votre journée !</p>
+				{% endif %}
 		</section>
 
 	</section>
