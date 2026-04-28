@@ -18,8 +18,8 @@ class Task
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column (nullable: true)]
-    private ?bool $isPinned = null;
+    #[ORM\Column (type: Types::BOOLEAN, options: ['default' => false])]
+    private ?bool $isPinned = false;
 
     #[ORM\Column(type: Types::STRING,  enumType: TaskStatus::class, 
     options: ['default' => TaskStatus::Pending])]

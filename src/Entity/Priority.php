@@ -18,7 +18,7 @@ class Priority
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $importance = null;
 
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'priority')]
