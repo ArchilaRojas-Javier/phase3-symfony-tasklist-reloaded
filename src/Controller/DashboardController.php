@@ -58,12 +58,6 @@ final class DashboardController extends AbstractController
                    ->setParameter('priority', $priority);
             }
         }
-
-        // $selectedFolder = null;
-        
-        // if ($selectedFolderId) {
-        //     $selectedFolder = $folderRepository->findOneBy(['id' => $selectedFolderId, 'user' => $user]);
-        // }
         
         $tasks = $qb->getQuery()->getResult();
 
@@ -71,7 +65,6 @@ final class DashboardController extends AbstractController
             'controller_name' => 'DashboardController',
             'folders' => $folders,
             'tasks' => $tasks,          
-            //'selectedFolder' => $selectedFolder,
             'taskPinned' => $taskPinned, 
             'priorities' => $priorities,
         ]);
